@@ -21,7 +21,8 @@
 		const kinds = new Set<Place['kind']>(['town', 'village', 'hamlet', 'peak', 'water', ...(radius <= 2500 ? (['locality'] as const) : [])]);
 		const lim = radius * 0.92;
 		// most important first, and none crowding one already chosen (names overlap long before places do)
-		const gap = radius * 0.16;
+		// (names are a fixed size on screen: on a narrow screen the land under them is smaller, so they need more of it)
+		const gap = radius * 0.16 * Math.max(1, 900 / (globalThis.innerWidth ?? 900));
 		const chosen: Place[] = [];
 		for (const p of places.filter((p) => kinds.has(p.kind) && Math.hypot(p.x, p.n) < lim).sort((a, b) => rank(b) - rank(a))) {
 			if (chosen.length >= MAX) break;
