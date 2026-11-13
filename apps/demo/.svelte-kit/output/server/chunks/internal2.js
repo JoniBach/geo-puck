@@ -1246,7 +1246,7 @@ var options = {
 		app: ({ head, body, assets, nonce, env }) => "<!doctype html>\n<html lang=\"en\">\n	<head>\n		<meta charset=\"utf-8\" />\n		<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\" />\n		<meta name=\"description\" content=\"Any place on Earth as a terrain diorama on a compass plinth: live elevation, imagery, map lines, sun, moon and weather.\" />\n		<link rel=\"icon\" href=\"" + assets + "/favicon.svg\" type=\"image/svg+xml\" />\n		<title>Geo Puck</title>\n		" + head + "\n	</head>\n	<body>\n		<div style=\"display: contents\">" + body + "</div>\n	</body>\n</html>\n",
 		error: error_template_default
 	},
-	version_hash: "14z1nxy"
+	version_hash: "1m9o197"
 };
 async function get_hooks() {
 	let handle;

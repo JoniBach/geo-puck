@@ -11,6 +11,8 @@ export default defineConfig({
 			},
 			// a single static page: everything is fetched in the browser (no server, no API keys)
 			adapter: adapter(),
+			// served from a folder on GitHub Pages (BASE_PATH=/geo-puck); from the root anywhere else
+			paths: { base: (process.env.BASE_PATH ?? '') as '' | `/${string}` },
 			// the packages straight from their source, so an edit to either shows at once
 			alias: {
 				'@jonibach/geo-puck': '../../packages/puck/src/lib/index.ts',

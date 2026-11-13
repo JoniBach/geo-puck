@@ -1,5 +1,5 @@
 // ../../node_modules/@sveltejs/kit/src/runtime/app/paths/internal/server.js
-var base = "";
+var base = "/geo-puck";
 var assets = base;
 var app_dir = "_app";
 var initial = {

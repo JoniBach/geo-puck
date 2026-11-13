@@ -139,6 +139,25 @@ node tests/shot.mjs '/?lat=53.0685&lon=-4.0763&name=Yr%20Wyddfa&forest&hour=13' 
 The demo takes `?lat=…&lon=…&name=…` for a place, `&radius=40000` for a wider puck, `&hour=13` for
 a time of day and `&forest` to plant a tree at each named place.
 
+## Releasing
+
+Everything is released by GitHub Actions when a pull request is merged to `main`
+([release.yml](.github/workflows/release.yml)). Nothing is published or deployed by hand.
+
+1. In a pull request, raise `version` in both packages' `package.json` (they share one version),
+   and the puck's dependency on the data package to match.
+2. Merge it. The workflow runs the checks again, makes the GitHub release `v<version>` with both
+   packages attached as `.tgz` files, publishes them to npm, and deploys the demo to GitHub Pages.
+
+A merge that leaves the version alone releases nothing and only re-deploys the demo. Publishing to
+npm waits for the repository variable `NPM_PUBLISH` to be `true`: npm needs each package published
+once by hand before the repository can be made its trusted publisher. Until then an app can install
+from the release files:
+
+```json
+"@jonibach/geo-puck": "https://github.com/JoniBach/geo-puck/releases/download/v0.1.0/jonibach-geo-puck-0.1.0.tgz"
+```
+
 ## Limits
 
 - Heights come as 20 to 40 m pixels, so summits read a little low.

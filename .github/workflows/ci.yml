@@ -1,8 +1,7 @@
-# Types, a build of both packages, and their tests, on every push and pull request.
+# On every pull request: types, a build of both packages, their tests, and a build of the demo.
+# The same steps run again on the merge, in release.yml, before anything is published.
 name: CI
 on:
-  push:
-    branches: [main]
   pull_request:
 permissions:
   contents: read

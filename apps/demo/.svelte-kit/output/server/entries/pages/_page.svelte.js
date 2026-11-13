@@ -3354,7 +3354,7 @@ function GlobeLabels($$renderer, $$props) {
 				...radius <= 2500 ? ["locality"] : []
 			]);
 			const lim = radius * .92;
-			const gap = radius * .16;
+			const gap = radius * .16 * Math.max(1, 900 / (globalThis.innerWidth ?? 900));
 			const chosen = [];
 			for (const p of places.filter((p) => kinds.has(p.kind) && Math.hypot(p.x, p.n) < lim).sort((a, b) => rank(b) - rank(a))) {
 				if (chosen.length >= MAX) break;
