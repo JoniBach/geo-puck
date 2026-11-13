@@ -1,7 +1,7 @@
 // The puck: any place on Earth as a terrain diorama on a compass plinth, as Svelte components
 // (Three.js through Threlte). <GeoPuck> is the whole thing; PuckState is what it shows.
 export { default as GeoPuck } from './Globe.svelte';
-export { PuckState, DEFAULTS, FOG_MIN, FOG_MAX, FOG_GAP, type Spot, type Loaded } from './puck.svelte.js';
+export { PuckState, DEFAULTS, FOG_MIN, FOG_MAX, FOG_GAP, type Spot, type Loaded, type PuckFocus } from './puck.svelte.js';
 export { Imagery, SOURCES, type Surface } from './imagery.js';
 export { GlobeState, type PuckLayerContext } from './state.js';
 export { busy } from './FrameGovernor.svelte';

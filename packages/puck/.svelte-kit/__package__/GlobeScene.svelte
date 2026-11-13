@@ -30,6 +30,8 @@
 	import { direction, moonAt, skyColours, sunAt } from '@jonibach/geo-puck-data';
 	import { easeLight, type LightGoal } from './lighting.js';
 	import { GlobeState, type PuckLayerContext } from './state.js';
+	import type { OrbitControls as Controls } from 'three/examples/jsm/controls/OrbitControls.js';
+	import { busy } from './FrameGovernor.svelte';
 	import { localPlane } from '@jonibach/geo-puck-data';
 
 	let {
@@ -37,10 +39,13 @@
 		data,
 		imagery,
 		layers,
+		controls,
 		onsky,
 		onshadow,
 		rise
 	}: {
+		/** the camera's controls (the stage's): flown to the puck's focus */
+		controls?: Controls;
 		puck: PuckState;
 		data: Loaded;
 		imagery: Imagery;
@@ -223,6 +228,96 @@
 			sky = next;
 			onsky(colours.top, colours.bottom);
 		}
+	});
+
+	// ---- the focus: flying the camera down to a point on the land, and turning around it ---------
+	const anchor = new Group();
+	land.add(anchor);
+	const aim = new Vector3();
+	const from = new Vector3();
+	const offset = new Vector3();
+	const HOME = new Vector3(0, V * 0.04, 0);
+	/** the view to come back to: where the camera was before it first came down */
+	let home: { distance: number; polar: number; min: number; max: number; polarMax: number } | null = null;
+	let flying: { key: unknown; t: number; from: Vector3; distance: [number, number]; polar: [number, number]; azimuth: [number, number] | null } | null = null;
+	let flown: unknown = null;
+	const ease = (u: number) => (u < 0.5 ? 4 * u * u * u : 1 - (-2 * u + 2) ** 3 / 2);
+	// dragging cuts a flight short: the view stays turned around the focus from where it is
+	$effect(() => {
+		if (!controls) return;
+		const stop = () => (flying = null);
+		controls.addEventListener('start', stop);
+		return () => controls.removeEventListener('start', stop);
+	});
+
+	useTask((dt) => {
+		if (!controls) return;
+		const f = puck.focus;
+		const k = V / R;
+		// where the camera turns around now, in the scene
+		if (f) {
+			const g = globe.ground(f.x, f.n);
+			const [east, up, north] = f.offset ?? [0, 0, 0];
+			anchor.position.set(f.x + east, (Number.isFinite(g) ? g : 0) * exag + (f.height ?? 0) + up, -(f.n + north));
+			land.updateMatrixWorld(true);
+			anchor.getWorldPosition(aim);
+		} else aim.copy(HOME);
+		const cam = controls.object;
+		if (f !== flown) {
+			// a new flight, from wherever the view is now
+			offset.copy(cam.position).sub(controls.target);
+			const distance = offset.length();
+			const polar = Math.acos(Math.min(1, Math.max(-1, offset.y / distance)));
+			if (!home) home = { distance, polar, min: controls.minDistance, max: controls.maxDistance, polarMax: controls.maxPolarAngle };
+			const toDistance = f ? (f.distance ?? R * 0.1) * k : home.distance;
+			const toPolar = f ? Math.min(f.polar ?? 1.25, 1.45) : home.polar;
+			const azimuth = Math.atan2(offset.x, offset.z);
+			// a bearing is a compass direction (east of north); in the scene north is -z
+			const toAzimuth = f?.bearing !== undefined ? Math.atan2(Math.sin(f.bearing), -Math.cos(f.bearing)) : null;
+			flying = {
+				key: f,
+				t: 0,
+				from: controls.target.clone(),
+				distance: [distance, toDistance],
+				polar: [polar, toPolar],
+				azimuth: toAzimuth === null ? null : [azimuth, azimuth + Math.atan2(Math.sin(toAzimuth - azimuth), Math.cos(toAzimuth - azimuth))]
+			};
+			flown = f;
+			// no limits while it flies; the focus's own once it lands
+			controls.minDistance = 0;
+			controls.maxDistance = Infinity;
+			controls.maxPolarAngle = Math.max(home.polarMax, 1.48);
+		}
+		offset.copy(cam.position).sub(controls.target);
+		let distance = offset.length();
+		let polar = Math.acos(Math.min(1, Math.max(-1, offset.y / distance)));
+		let azimuth = Math.atan2(offset.x, offset.z);
+		if (flying) {
+			flying.t = Math.min(1, flying.t + dt / 1.6);
+			const u = ease(flying.t);
+			from.copy(flying.from).lerp(aim, u);
+			distance = flying.distance[0] + (flying.distance[1] - flying.distance[0]) * u;
+			polar = flying.polar[0] + (flying.polar[1] - flying.polar[0]) * u;
+			if (flying.azimuth) azimuth = flying.azimuth[0] + (flying.azimuth[1] - flying.azimuth[0]) * u;
+			busy(400);
+			if (flying.t >= 1) {
+				flying = null;
+				if (f) {
+					controls.minDistance = distance * 0.35;
+					controls.maxDistance = Math.max(distance * 3, R * 0.6 * k);
+					controls.maxPolarAngle = 1.48;
+				} else if (home) {
+					controls.minDistance = home.min;
+					controls.maxDistance = home.max;
+					controls.maxPolarAngle = home.polarMax;
+				}
+			}
+		} else if (f) from.copy(aim); // keep turning around it as the land settles
+		else return;
+		controls.target.copy(from);
+		offset.set(Math.sin(polar) * Math.sin(azimuth), Math.cos(polar), Math.sin(polar) * Math.cos(azimuth)).multiplyScalar(distance);
+		cam.position.copy(from).add(offset);
+		controls.update();
 	});
 
 	$effect(() => imagery.show(puck.surface, data.spot, R * 1.02));

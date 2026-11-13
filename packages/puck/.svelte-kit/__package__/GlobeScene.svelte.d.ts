@@ -2,7 +2,10 @@ import type { Snippet } from 'svelte';
 import type { PuckState, Loaded } from './puck.svelte.js';
 import type { Imagery } from './imagery.js';
 import { type PuckLayerContext } from './state.js';
+import type { OrbitControls as Controls } from 'three/examples/jsm/controls/OrbitControls.js';
 type $$ComponentProps = {
+    /** the camera's controls (the stage's): flown to the puck's focus */
+    controls?: Controls;
     puck: PuckState;
     data: Loaded;
     imagery: Imagery;
