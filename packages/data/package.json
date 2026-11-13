@@ -1,0 +1,40 @@
+{
+	"name": "@jonibach/geo-puck-data",
+	"version": "0.1.0",
+	"description": "The data behind a geo puck, with no framework and no API keys: terrain heights, OpenStreetMap shapes, weather, place search, sun and moon, around any place on Earth.",
+	"license": "MIT",
+	"author": "Joni Bach",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/JoniBach/geo-puck.git",
+		"directory": "packages/data"
+	},
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsc -p tsconfig.json",
+		"check": "tsc -p tsconfig.json --noEmit",
+		"test": "node --test tests/"
+	},
+	"dependencies": {
+		"@mapbox/vector-tile": "^3.0.0",
+		"d3-interpolate": "^3.0.1",
+		"pbf": "^5.1.2"
+	},
+	"devDependencies": {
+		"@types/d3-interpolate": "^3.0.4",
+		"typescript": "^6.0.3"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

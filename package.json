@@ -1,0 +1,23 @@
+{
+	"name": "geo-puck-workspace",
+	"private": true,
+	"type": "module",
+	"description": "Geo Puck: any place on Earth as a terrain diorama on a compass plinth, as libraries.",
+	"workspaces": [
+		"packages/data",
+		"packages/puck",
+		"apps/demo"
+	],
+	"scripts": {
+		"dev": "npm run dev -w apps/demo",
+		"build": "npm run build -w packages/data && npm run build -w packages/puck",
+		"build:demo": "npm run build -w apps/demo",
+		"check": "npm run check -w packages/data && npm run check -w packages/puck && npm run check -w apps/demo",
+		"test": "npm test -w packages/data && npm test -w packages/puck",
+		"test:smoke": "node tests/smoke.mjs",
+		"pack": "npm run build && npm pack -w packages/data -w packages/puck --pack-destination dist-packs"
+	},
+	"devDependencies": {
+		"puppeteer-core": "^25.12.0"
+	}
+}
