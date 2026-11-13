@@ -5,6 +5,7 @@
   Lives in the land's group (local metres, exaggerated y).
 -->
 <script lang="ts">
+	import { useTask } from '@threlte/core';
 	import { HTML } from '@threlte/extras';
 	import type { Place } from '@jonibach/geo-puck-data';
 	import type { GlobeState } from './state.js';
@@ -32,11 +33,30 @@
 	});
 
 	const lift = $derived(radius * 0.012);
+
+	// Names keep clear of each other on screen: a few times a second, each name (most important
+	// first) hides if it would overlap one already showing. Turning the puck or a narrow screen
+	// changes which fit, so this is measured where they are drawn, not worked out on the map.
+	const els: (HTMLElement | null)[] = $state([]);
+	let since = 0;
+	useTask((dt) => {
+		since += dt;
+		if (since < 0.25) return;
+		since = 0;
+		const kept: DOMRect[] = [];
+		for (const el of els) {
+			if (!el) continue;
+			const r = el.getBoundingClientRect();
+			const clash = r.width > 0 && kept.some((k) => r.left < k.right + 4 && r.right > k.left - 4 && r.top < k.bottom + 2 && r.bottom > k.top - 2);
+			el.classList.toggle('hidden', clash);
+			if (!clash) kept.push(r);
+		}
+	});
 </script>
 
-{#each shown as l (l.key)}
+{#each shown as l, i (l.key)}
 	<HTML position={[l.p.x, l.h * exaggeration + lift, -l.p.n]} center pointerEvents="none" zIndexRange={[30, 0]}>
-		<span class="gl {l.p.kind}" aria-hidden="true">
+		<span class="gl {l.p.kind}" aria-hidden="true" bind:this={els[i]}>
 			{#if l.p.kind === 'peak'}<span class="tri">▲</span>{/if}{l.p.name}{#if l.p.kind === 'peak' && l.p.ele}<small>{' '}{l.p.ele} m</small>{/if}
 		</span>
 	</HTML>
@@ -56,6 +76,12 @@
 			0 0 6px #fffaf2,
 			0 0 10px rgb(255 250 242 / 0.8);
 		transform: translateY(-10px);
+	}
+	.gl.hidden {
+		opacity: 0;
+	}
+	.gl {
+		transition: opacity 0.3s ease;
 	}
 	.town,
 	.village {

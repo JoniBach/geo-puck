@@ -1,6 +1,6 @@
 {
 	"name": "@jonibach/geo-puck",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Any place on Earth as a terrain diorama on a compass plinth: Svelte components (Three.js through Threlte) with live heights, imagery, map lines, sun, moon and weather, and layers of your own, such as a generative forest.",
 	"license": "MIT",
 	"author": "JoniBach",
@@ -28,7 +28,7 @@
 		"test": "node --test tests/*.test.mjs"
 	},
 	"dependencies": {
-		"@jonibach/geo-puck-data": "^0.1.0"
+		"@jonibach/geo-puck-data": "^0.1.1"
 	},
 	"peerDependencies": {
 		"@threlte/core": "^8.6.1",
