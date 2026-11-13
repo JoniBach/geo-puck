@@ -21,6 +21,17 @@ export class PuckState {
     halo = $state(DEFAULTS.halo);
     surface = $state(DEFAULTS.surface);
     layers = $state({ contours: true, roads: true, water: true, parks: true, weather: true, labels: true, marker: true });
+    /**
+     * Room taken by the app's own panels at each edge of the puck, in CSS pixels: the picture is
+     * centred in what's left (the camera still turns around the middle of the puck).
+     */
+    inset = $state({ left: 0, right: 0, top: 0, bottom: 0 });
+    /**
+     * Where the camera is brought down to (null: the whole puck). Setting it flies the camera there
+     * and makes it turn around that point; setting it back to null flies it back out. Each new value
+     * is a new flight, so set a new object rather than changing one in place.
+     */
+    focus = $state.raw(null);
     /** what's on the globe (null: the meadow, before any search) */
     loaded = $state.raw(null);
     /** the card with search and settings is open (folded: just a pill) */

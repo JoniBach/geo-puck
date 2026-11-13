@@ -1,0 +1,39 @@
+{
+	"name": "@jonibach/data-tree",
+	"version": "0.2.0",
+	"description": "A tree as a 3D chart for Three.js: groups of items grow a tree by space colonisation, its limbs the groups and its leaves the items' values. Every tree is unique to its seed and data.",
+	"license": "MIT",
+	"author": "JoniBach",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/JoniBach/geo-puck.git",
+		"directory": "packages/tree"
+	},
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsc -p tsconfig.json",
+		"check": "tsc -p tsconfig.json --noEmit",
+		"test": "node --test tests/*.test.mjs"
+	},
+	"peerDependencies": {
+		"three": ">=0.186.0"
+	},
+	"devDependencies": {
+		"@types/three": "^0.186.0",
+		"three": "^0.186.1",
+		"typescript": "^6.0.3"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

@@ -11,6 +11,7 @@ Everything is fetched live from free, open sources. There are no API keys and no
 | --- | --- | --- |
 | [`@jonibach/geo-puck-data`](packages/data) | The data behind a puck, as plain TypeScript: terrain heights, OpenStreetMap shapes, weather, place search, sun and moon | A browser, or Node 20+ |
 | [`@jonibach/geo-puck`](packages/puck) | The puck itself, as Svelte components drawn with Three.js | Svelte 5, Three.js, Threlte 8 |
+| [`@jonibach/data-tree`](packages/tree) | A tree as a 3D chart: groups of items grow a tree whose limbs are the groups and whose leaves show the items' values | Three.js |
 | [`apps/demo`](apps/demo) | A small app on the two packages: search for anywhere and look at it | |
 
 The code began as [Geo Globe](https://github.com/JoniBach/geo-globe), a Three.js workshop demo.
@@ -41,6 +42,30 @@ The code began as [Geo Globe](https://github.com/JoniBach/geo-globe), a Three.js
 
 `puck.go(spot)` loads a place and resolves when it is on the plinth. `puck.onplace` is called each
 time one lands. `puck.loaded` is the place now shown, with its heights and map data.
+
+## Coming down to the land
+
+Set `puck.focus` to bring the camera down beside a point on the land, like standing next to it.
+The camera flies there and then turns around that point when dragged. Set it back to `null` to fly
+back out to the whole puck. Dragging during a flight cuts it short.
+
+```ts
+puck.focus = { x: 1200, n: -800, height: 300, distance: 1500, polar: 1.3 };
+```
+
+| Field | Meaning | Default |
+| --- | --- | --- |
+| `x`, `n` | The point on the ground, in metres east and north of the centre | |
+| `height` | Metres above the ground there | 0 |
+| `offset` | A further step in metres east, up and north, without following the ground: for a point on something standing at (x, n) | none |
+| `distance` | How far away the camera stands, in metres | a tenth of the radius |
+| `polar` | The camera's angle down from overhead, in radians. About 1.3 is close to eye level | 1.25 |
+| `bearing` | Which side to stand on: the compass direction from the point to the camera, in radians east of north | the side it is on |
+
+Each new object is a new flight, so set a fresh one rather than changing one in place.
+
+`puck.inset` reserves room for the app's own panels (`{ left, right, top, bottom }` in CSS pixels):
+the picture is centred in the space they leave.
 
 ## Layers of your own
 
@@ -144,9 +169,9 @@ a time of day and `&forest` to plant a tree at each named place.
 Everything is released by GitHub Actions when a pull request is merged to `main`
 ([release.yml](.github/workflows/release.yml)). Nothing is published or deployed by hand.
 
-1. In a pull request, raise `version` in both packages' `package.json` (they share one version),
+1. In a pull request, raise `version` in every package's `package.json` (they share one version),
    and the puck's dependency on the data package to match.
-2. Merge it. The workflow runs the checks again, makes the GitHub release `v<version>` with both
+2. Merge it. The workflow runs the checks again, makes the GitHub release `v<version>` with the
    packages attached as `.tgz` files, publishes them to npm, and deploys the demo to GitHub Pages.
 
 A merge that leaves the version alone releases nothing and only re-deploys the demo. Publishing to

@@ -25,8 +25,8 @@
 		"vite": "^8.0.16"
 	},
 	"dependencies": {
-		"@jonibach/geo-puck": "^0.1.0",
-		"@jonibach/geo-puck-data": "^0.1.0",
+		"@jonibach/geo-puck": "*",
+		"@jonibach/geo-puck-data": "*",
 		"@threlte/core": "^8.6.1",
 		"@threlte/extras": "^9.22.0",
 		"three": "^0.186.1"

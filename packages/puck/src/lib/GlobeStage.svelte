@@ -9,6 +9,7 @@
 	import { T, useTask } from '@threlte/core';
 	import { OrbitControls } from '@threlte/extras';
 	import type { PerspectiveCamera } from 'three';
+	import type { OrbitControls as Controls } from 'three/examples/jsm/controls/OrbitControls.js';
 	import type { PuckState, Loaded } from './puck.svelte.js';
 	import { formatLonLat } from '@jonibach/geo-puck-data';
 	import type { Imagery } from './imagery.js';
@@ -45,9 +46,14 @@
 	// phones: while the card is open it covers the top of the screen, so draw the globe lower down
 	// (a view offset shifts the picture without moving the camera: turning still pivots on the centre)
 	let camera = $state<PerspectiveCamera>();
+	let controls = $state<Controls>();
 	$effect(() => {
 		if (!camera) return;
-		if (puck.controls && width < 700 && height > width) camera.setViewOffset(width, height, 0, -height * 0.16, width, height);
+		// …and the app's own panels: the picture is centred in the room they leave
+		const { left, right, top, bottom } = puck.inset;
+		const x = (right - left) / 2;
+		const y = (bottom - top) / 2 + (puck.controls && width < 700 && height > width ? -height * 0.16 : 0);
+		if (x || y) camera.setViewOffset(width, height, x, y, width, height);
 		else camera.clearViewOffset();
 	});
 
@@ -122,7 +128,7 @@
 <svelte:window bind:innerWidth={width} bind:innerHeight={height} />
 
 <T.PerspectiveCamera bind:ref={camera} makeDefault position={[0, V * 2.1 * fit, V * 3.9 * fit]} fov={34} near={V * 0.01} far={V * 40}>
-	<OrbitControls target={[0, V * 0.04, 0]} enablePan={false} enableDamping minDistance={V * 1.3} maxDistance={V * 6 * fit} maxPolarAngle={Math.PI * 0.47} />
+	<OrbitControls bind:ref={controls} target={[0, V * 0.04, 0]} enablePan={false} enableDamping minDistance={V * 1.3} maxDistance={V * 6 * fit} maxPolarAngle={Math.PI * 0.47} />
 </T.PerspectiveCamera>
 
 <!-- the lettering fades out as the land falls and back in as the new land rises -->
@@ -130,7 +136,7 @@
 
 <!-- a keyed list, not {#if}: a place's scene keeps its own data to the end, never null mid-teardown -->
 {#each shown ? [shown] : [] as data (data)}
-	<GlobeScene {puck} {data} {imagery} {layers} {onsky} rise={risen} onshadow={(s) => (shadowGoal = s)} />
+	<GlobeScene {puck} {data} {imagery} {layers} {controls} {onsky} rise={risen} onshadow={(s) => (shadowGoal = s)} />
 {:else}
 	<GlobeOverview rise={risen} />
 {/each}

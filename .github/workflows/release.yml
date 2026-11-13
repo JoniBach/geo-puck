@@ -2,15 +2,15 @@
 # released or deployed by hand.
 #
 #   1. The checks CI ran on the pull request run again on the merged code.
-#   2. If the packages' version has no release yet, one is made: tag v<version>, with both packages
+#   2. If the packages' version has no release yet, one is made: tag v<version>, with the packages
 #      attached as .tgz files (an app can install straight from those URLs).
 #   3. Each package whose version is not on npm is published there, by trusted publishing: no token
 #      is stored. This step waits for the repository variable NPM_PUBLISH to be "true", because npm
 #      needs each package published once by hand before a trusted publisher can be set for it.
 #   4. The demo is built and deployed to GitHub Pages.
 #
-# So to release: raise "version" in packages/data/package.json and packages/puck/package.json (and
-# the puck's dependency on the data package) in a pull request, and merge it. A merge that leaves
+# So to release: raise "version" in packages/data, packages/tree and packages/puck's package.json
+# (and the puck's dependency on the data package) in a pull request, and merge it. A merge that leaves
 # the version alone re-deploys the demo and releases nothing.
 name: Release
 on:
@@ -42,8 +42,9 @@ jobs:
         id: version
         run: |
           data="$(node -p "require('./packages/data/package.json').version")"
+          tree="$(node -p "require('./packages/tree/package.json').version")"
           puck="$(node -p "require('./packages/puck/package.json').version")"
-          if [ "$data" != "$puck" ]; then echo "the two packages must share a version (data $data, puck $puck)"; exit 1; fi
+          if [ "$data" != "$puck" ] || [ "$tree" != "$puck" ]; then echo "the packages must share a version (data $data, tree $tree, puck $puck)"; exit 1; fi
           echo "version=$puck" >> "$GITHUB_OUTPUT"
           if gh release view "v$puck" >/dev/null 2>&1; then echo "released=true" >> "$GITHUB_OUTPUT"; else echo "released=false" >> "$GITHUB_OUTPUT"; fi
         env:
@@ -56,7 +57,7 @@ jobs:
       - name: Publish to npm what is not there yet
         if: vars.NPM_PUBLISH == 'true'
         run: |
-          for dir in packages/data packages/puck; do
+          for dir in packages/data packages/tree packages/puck; do
             name="$(node -p "require('./$dir/package.json').name")"
             version="$(node -p "require('./$dir/package.json').version")"
             if npm view "$name@$version" version >/dev/null 2>&1; then
