@@ -22,6 +22,14 @@ page.on('pageerror', (e) => errors.push(e.message));
 page.on('console', (m) => m.type() === 'error' && !/favicon/.test(m.text()) && errors.push(m.text()));
 await page.goto(BASE + path, { waitUntil: 'networkidle2', timeout: 120000 });
 await new Promise((r) => setTimeout(r, Number(settle)));
+// MOUSE=x,y: point at something first; CLICK=1 to click it
+if (process.env.MOUSE) {
+	const [mx, my] = process.env.MOUSE.split(',').map(Number);
+	await page.mouse.move(mx - 4, my - 4);
+	await page.mouse.move(mx, my);
+	if (process.env.CLICK) await page.mouse.click(mx, my);
+	await new Promise((r) => setTimeout(r, 1500));
+}
 if (process.env.EVAL) console.log(JSON.stringify(await page.evaluate(process.env.EVAL)));
 const clip = process.env.CLIP?.split(',').map(Number);
 await page.screenshot({ path: out, ...(clip ? { clip: { x: clip[0], y: clip[1], width: clip[2], height: clip[3] } } : {}) });

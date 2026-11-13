@@ -36,8 +36,13 @@
 	const CELL = Math.max(20, Math.round(R / 90));
 	const HALF = Math.ceil(R / CELL) + 2;
 	const SIDE = HALF * 2 + 1;
-	/** earth below the lowest ground in the disc, as a share of the radius (before exaggeration) */
-	const DEPTH = 0.05;
+	/**
+	 * earth below the lowest ground in the disc, as a share of the radius (before exaggeration): a
+	 * tenth of the radius once exaggerated, however tall the hills are stood (a wide, flat puck
+	 * with its relief stood up ×6 would otherwise sit on a cliff of earth)
+	 */
+	// svelte-ignore state_referenced_locally — the depth is set when the land is built
+	const DEPTH = 0.1 / Math.max(1, puck.exaggeration);
 
 	/** best height we have: the sharp tiles, else the coarse ones; the sea is level at 0 */
 	const ground = (x: number, n: number) => {

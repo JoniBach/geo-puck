@@ -183,6 +183,7 @@ export async function mapAround(centre: LonLat, near: number, far: number): Prom
 	// (a regional puck, tens of km across, steps down further: a handful of tiles whatever its size)
 	const zNear = near <= 2600 ? 14 : zoomFor(near, centre.lat, 6, 13);
 	const zFar = far <= 9000 ? 12 : far <= 20000 ? 11 : far <= 45000 ? 10 : zoomFor(far, centre.lat, 5, 9);
+	const landTiers = near > 45000 ? 0 : near > 14000 ? 1 : near > 8000 ? 2 : 4;
 	const inReach = (reach: number) => (pts: [number, number][]) => pts.some(([x, n]) => Math.abs(x) < reach && Math.abs(n) < reach);
 
 	const band = (reach: number, z: number, detail: boolean) =>
@@ -195,8 +196,9 @@ export async function mapAround(centre: LonLat, near: number, far: number): Prom
 				const within = inReach(reach);
 				if (layer === 'transportation' && type === 2) {
 					const tier = TIER[p.class as string];
-					// tunnels are underground; beyond the land only the main roads
-					if (tier === undefined || p.brunnel === 'tunnel' || (!detail && tier > 1)) return;
+					// tunnels are underground; beyond the land only the main roads, and on a wide puck
+					// (tens of km) only those on the land too: every lane would hide the land under a net
+					if (tier === undefined || p.brunnel === 'tunnel' || tier > (detail ? landTiers : Math.min(1, landTiers))) return;
 					for (const line of rings) {
 						const pts = line.map(toLocal);
 						// the far band skips what the near band has in detail

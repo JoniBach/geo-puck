@@ -1,0 +1,36 @@
+# Publishing a GitHub release (tag v0.1.0 for version 0.1.0) builds both packages, attaches them to
+# the release as .tgz files (an app can install straight from those), and, once the repository
+# variable NPM_PUBLISH is "true", publishes them to npm by trusted publishing (no token stored).
+# npm needs each package published by hand once before a trusted publisher can be set for it.
+name: Release
+on:
+  release:
+    types: [published]
+permissions:
+  contents: write
+  id-token: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: npm
+      - name: Tag matches the packages' version
+        run: |
+          test "v$(node -p "require('./packages/data/package.json').version")" = "${GITHUB_REF_NAME}"
+          test "v$(node -p "require('./packages/puck/package.json').version")" = "${GITHUB_REF_NAME}"
+      - run: npm ci
+      - run: npm run check
+      - run: npm run pack
+      - run: npm test
+      - name: Attach the packages to the release
+        run: gh release upload "${GITHUB_REF_NAME}" dist-packs/*.tgz --clobber
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Publish to npm
+        if: vars.NPM_PUBLISH == 'true'
+        run: npm publish -w packages/data -w packages/puck

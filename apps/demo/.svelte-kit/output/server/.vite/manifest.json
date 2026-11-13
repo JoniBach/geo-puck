@@ -1,0 +1,171 @@
+{
+  "../../node_modules/@fontsource-variable/figtree/files/figtree-latin-ext-wght-normal.woff2": {
+    "file": "_app/immutable/assets/figtree-latin-ext-wght-normal.DCwSJGxG.woff2",
+    "src": "../../node_modules/@fontsource-variable/figtree/files/figtree-latin-ext-wght-normal.woff2"
+  },
+  "../../node_modules/@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2": {
+    "file": "_app/immutable/assets/figtree-latin-wght-normal.D_ZTVpCC.woff2",
+    "src": "../../node_modules/@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2"
+  },
+  "../../node_modules/@fontsource-variable/fraunces/files/fraunces-latin-ext-full-normal.woff2": {
+    "file": "_app/immutable/assets/fraunces-latin-ext-full-normal.YHFkNujK.woff2",
+    "src": "../../node_modules/@fontsource-variable/fraunces/files/fraunces-latin-ext-full-normal.woff2"
+  },
+  "../../node_modules/@fontsource-variable/fraunces/files/fraunces-latin-full-normal.woff2": {
+    "file": "_app/immutable/assets/fraunces-latin-full-normal.CFFu7zhK.woff2",
+    "src": "../../node_modules/@fontsource-variable/fraunces/files/fraunces-latin-full-normal.woff2"
+  },
+  "../../node_modules/@fontsource-variable/fraunces/files/fraunces-vietnamese-full-normal.woff2": {
+    "file": "_app/immutable/assets/fraunces-vietnamese-full-normal.7BpKI3vF.woff2",
+    "src": "../../node_modules/@fontsource-variable/fraunces/files/fraunces-vietnamese-full-normal.woff2"
+  },
+  "../../node_modules/@sveltejs/kit/src/runtime/app/server/remote/index.js": {
+    "file": "remote-entry.js",
+    "name": "remote-entry",
+    "src": "../../node_modules/@sveltejs/kit/src/runtime/app/server/remote/index.js",
+    "isEntry": true,
+    "imports": [
+      "_utils.js",
+      "_shared.js",
+      "_internal.js"
+    ]
+  },
+  "../../node_modules/@sveltejs/kit/src/runtime/components/svelte-5/error.svelte": {
+    "file": "entries/fallbacks/error.svelte.js",
+    "name": "entries/fallbacks/error.svelte",
+    "src": "../../node_modules/@sveltejs/kit/src/runtime/components/svelte-5/error.svelte",
+    "isEntry": true,
+    "imports": [
+      "_server.js",
+      "_client.js",
+      "_internal2.js"
+    ]
+  },
+  "../../node_modules/@sveltejs/kit/src/runtime/server/index.js": {
+    "file": "index.js",
+    "name": "index",
+    "src": "../../node_modules/@sveltejs/kit/src/runtime/server/index.js",
+    "isEntry": true,
+    "imports": [
+      "_shared.js",
+      "_internal.js",
+      "_utils.js",
+      "_exports.js",
+      "_internal2.js",
+      "_env.js"
+    ]
+  },
+  ".svelte-kit/generated/server/internal.js": {
+    "file": "internal.js",
+    "name": "internal",
+    "src": ".svelte-kit/generated/server/internal.js",
+    "isEntry": true,
+    "imports": [
+      "_internal.js",
+      "_internal2.js"
+    ]
+  },
+  "_client.js": {
+    "file": "chunks/client.js",
+    "name": "client",
+    "imports": [
+      "_internal2.js",
+      "_exports.js",
+      "_shared.js",
+      "_internal.js",
+      "_server.js"
+    ]
+  },
+  "_env.js": {
+    "file": "chunks/env.js",
+    "name": "env"
+  },
+  "_exports.js": {
+    "file": "chunks/exports.js",
+    "name": "exports",
+    "imports": [
+      "_server.js"
+    ]
+  },
+  "_internal.js": {
+    "file": "chunks/internal.js",
+    "name": "internal"
+  },
+  "_internal2.js": {
+    "file": "chunks/internal2.js",
+    "name": "internal",
+    "imports": [
+      "_rolldown-runtime.js",
+      "_server.js",
+      "_internal.js"
+    ]
+  },
+  "_rolldown-runtime.js": {
+    "file": "chunks/rolldown-runtime.js",
+    "name": "rolldown-runtime"
+  },
+  "_server.js": {
+    "file": "chunks/server.js",
+    "name": "server"
+  },
+  "_shared.js": {
+    "file": "chunks/shared.js",
+    "name": "shared"
+  },
+  "_utils.js": {
+    "file": "chunks/utils.js",
+    "name": "utils",
+    "imports": [
+      "_shared.js"
+    ]
+  },
+  "src/routes/+layout.svelte": {
+    "file": "entries/pages/_layout.svelte.js",
+    "name": "entries/pages/_layout.svelte",
+    "src": "src/routes/+layout.svelte",
+    "isEntry": true,
+    "imports": [
+      "_server.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_layout.C_gJZulc.css"
+    ],
+    "assets": [
+      "_app/immutable/assets/fraunces-vietnamese-full-normal.7BpKI3vF.woff2",
+      "_app/immutable/assets/fraunces-latin-ext-full-normal.YHFkNujK.woff2",
+      "_app/immutable/assets/fraunces-latin-full-normal.CFFu7zhK.woff2",
+      "_app/immutable/assets/figtree-latin-ext-wght-normal.DCwSJGxG.woff2",
+      "_app/immutable/assets/figtree-latin-wght-normal.D_ZTVpCC.woff2"
+    ]
+  },
+  "src/routes/+layout.ts": {
+    "file": "entries/pages/_layout.ts.js",
+    "name": "entries/pages/_layout.ts",
+    "src": "src/routes/+layout.ts",
+    "isEntry": true
+  },
+  "src/routes/+page.svelte": {
+    "file": "entries/pages/_page.svelte.js",
+    "name": "entries/pages/_page.svelte",
+    "src": "src/routes/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_server.js",
+      "_internal2.js",
+      "_client.js",
+      "_exports.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.CP_hkQql.css"
+    ]
+  },
+  "virtual:__sveltekit/env": {
+    "file": "env.js",
+    "name": "env",
+    "src": "virtual:__sveltekit/env",
+    "isEntry": true,
+    "imports": [
+      "_env.js"
+    ]
+  }
+}

@@ -20,11 +20,14 @@
 		// small localities only on small globes, where there's room for them
 		const kinds = new Set<Place['kind']>(['town', 'village', 'hamlet', 'peak', 'water', ...(radius <= 2500 ? (['locality'] as const) : [])]);
 		const lim = radius * 0.92;
-		return places
-			.filter((p) => kinds.has(p.kind) && Math.hypot(p.x, p.n) < lim)
-			.sort((a, b) => rank(b) - rank(a))
-			.slice(0, MAX)
-			.map((p) => ({ key: `${p.kind}${p.name}${Math.round(p.x)}`, p, h: globe.ground(p.x, p.n) }));
+		// most important first, and none crowding one already chosen (names overlap long before places do)
+		const gap = radius * 0.16;
+		const chosen: Place[] = [];
+		for (const p of places.filter((p) => kinds.has(p.kind) && Math.hypot(p.x, p.n) < lim).sort((a, b) => rank(b) - rank(a))) {
+			if (chosen.length >= MAX) break;
+			if (chosen.every((c) => Math.abs(c.n - p.n) > gap * 0.45 || Math.abs(c.x - p.x) > gap * 1.6)) chosen.push(p);
+		}
+		return chosen.map((p) => ({ key: `${p.kind}${p.name}${Math.round(p.x)}`, p, h: globe.ground(p.x, p.n) }));
 	});
 
 	const lift = $derived(radius * 0.012);
