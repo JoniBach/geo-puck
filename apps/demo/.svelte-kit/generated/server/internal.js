@@ -26,7 +26,7 @@ export const options = {
 		app: ({ head, body, assets, nonce, env }) => "<!doctype html>\n<html lang=\"en\">\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\" />\n\t\t<meta name=\"description\" content=\"Any place on Earth as a terrain diorama on a compass plinth: live elevation, imagery, map lines, sun, moon and weather.\" />\n\t\t<link rel=\"icon\" href=\"" + assets + "/favicon.svg\" type=\"image/svg+xml\" />\n\t\t<title>Geo Puck</title>\n\t\t" + head + "\n\t</head>\n\t<body>\n\t\t<div style=\"display: contents\">" + body + "</div>\n\t</body>\n</html>\n",
 		error
 	},
-	version_hash: "1hnhe1i"
+	version_hash: "17vm6ji"
 };
 
 export async function get_hooks() {

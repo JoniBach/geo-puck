@@ -11,6 +11,7 @@ Everything is fetched live from free, open sources. There are no API keys and no
 | --- | --- | --- |
 | [`@jonibach/geo-puck-data`](packages/data) | The data behind a puck, as plain TypeScript: terrain heights, OpenStreetMap shapes, weather, place search, sun and moon | A browser, or Node 20+ |
 | [`@jonibach/geo-puck`](packages/puck) | The puck itself, as Svelte components drawn with Three.js | Svelte 5, Three.js, Threlte 8 |
+| [`@jonibach/data-tree`](packages/tree) | A tree as a 3D chart: groups of items grow a tree whose limbs are the groups and whose leaves show the items' values | Three.js |
 | [`apps/demo`](apps/demo) | A small app on the two packages: search for anywhere and look at it | |
 
 The code began as [Geo Globe](https://github.com/JoniBach/geo-globe), a Three.js workshop demo.
@@ -168,9 +169,9 @@ a time of day and `&forest` to plant a tree at each named place.
 Everything is released by GitHub Actions when a pull request is merged to `main`
 ([release.yml](.github/workflows/release.yml)). Nothing is published or deployed by hand.
 
-1. In a pull request, raise `version` in both packages' `package.json` (they share one version),
+1. In a pull request, raise `version` in every package's `package.json` (they share one version),
    and the puck's dependency on the data package to match.
-2. Merge it. The workflow runs the checks again, makes the GitHub release `v<version>` with both
+2. Merge it. The workflow runs the checks again, makes the GitHub release `v<version>` with the
    packages attached as `.tgz` files, publishes them to npm, and deploys the demo to GitHub Pages.
 
 A merge that leaves the version alone releases nothing and only re-deploys the demo. Publishing to
